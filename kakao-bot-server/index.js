@@ -18,7 +18,7 @@ app.post('/webhook', (req, res) => {
 
     // 사용자가 "학사"라고 입력했을 때 "안녕하세요"라는 응답을 전송
     if (userMessage === '학사') {
-        responseText = '안녕하세요';
+        responseText = '안녕하세요 반갑습니다.';
     } else {
         responseText = '다른 메시지를 입력하셨습니다.';
     }
