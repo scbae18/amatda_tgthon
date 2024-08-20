@@ -18,9 +18,15 @@ app.post('/webhook', (req, res) => {
 
     // 사용자가 "학사"라고 입력했을 때 "안녕하세요"라는 응답을 전송
     if (userMessage === '학사') {
-        responseText = '안녕하세요 반갑습니다.';
-    } else {
-        responseText = '다른 메시지를 입력하셨습니다.';
+        responseText = '학사 요약 내용.';
+    }else if (userMessage === '채용') {
+        responseText = '채용 요약 내용.';
+    }else if (userMessage === '행사') {
+        responseText = '행사 요약 내용.';
+    }else if (userMessage === '장학') {
+        responseText = '장학 요약 내용.';
+    }else {
+        responseText = '주제로 구분할 수 없는 내용입니다 기타 내용을 보여드리겠습니다.';
     }
 
     const responseBody = {
