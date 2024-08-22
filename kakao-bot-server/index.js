@@ -10,7 +10,7 @@ app.use(bodyParser.json());
 
 let userStates = {};
 
-// /setKeyword 엔드포인트: 키워드 설정
+// /setKeyword 엔드포인트: 키워드 설정 및 저장
 app.post('/setKeyword', (req, res) => {
     const userRequest = req.body.userRequest;
 
@@ -20,34 +20,18 @@ app.post('/setKeyword', (req, res) => {
     }
 
     const userId = userRequest.user.id;
-    const userMessage = userRequest.utterance;
+    const userMessage = userRequest.utterance; // 사용자가 입력한 메시지
 
     console.log('User message:', userMessage);
     console.log('Current userStates:', userStates);
 
     let responseText = '';
 
-    if (userMessage === '키워드 설정') {
-        userStates[userId] = 'awaiting_keyword';
-        responseText = '키워드를 입력하세요.';
-        
-        // 응답 보내기
-        const responseBody = {
-            "version": "2.0",
-            "template": {
-                "outputs": [
-                    {
-                        "simpleText": {
-                            "text": responseText
-                        }
-                    }
-                ]
-            }
-        };
-
-        res.status(200).send(responseBody);
-    }
+    userStates[userId] === 'awaiting_keyword'
+    
+    // 사용자의 현재 상태 확인 및 처리
     if (userStates[userId] === 'awaiting_keyword') {
+        // 상태가 'awaiting_keyword'일 때, 즉 사용자가 키워드를 입력한 경우
         // 키워드 저장 처리
         database.saveKeyword(userId, userMessage, (err) => {
             if (err) {
@@ -74,8 +58,14 @@ app.post('/setKeyword', (req, res) => {
 
             res.status(200).send(responseBody);
         });
-    } else {
-        responseText = '주제를 구분할 수 없습니다. "키워드 설정"을 입력하여 키워드를 설정하세요.';
+
+        return; // 키워드 저장이 완료되면 여기서 함수 종료
+    }
+
+    // '키워드 설정' 명령어를 받으면 상태를 'awaiting_keyword'로 설정
+    if (userMessage === '키워드 설정') {
+        userStates[userId] = 'awaiting_keyword';
+        responseText = '키워드를 입력하세요.';
 
         // 응답 보내기
         const responseBody = {
@@ -91,8 +81,27 @@ app.post('/setKeyword', (req, res) => {
             }
         };
 
-        res.status(200).send(responseBody);
+        return res.status(200).send(responseBody);
     }
+
+    // 기타 상황에 대한 응답
+    responseText = '주제를 구분할 수 없습니다. "키워드 설정"을 입력하여 키워드를 설정하세요.';
+
+    // 응답 보내기
+    const responseBody = {
+        "version": "2.0",
+        "template": {
+            "outputs": [
+                {
+                    "simpleText": {
+                        "text": responseText
+                    }
+                }
+            ]
+        }
+    };
+
+    res.status(200).send(responseBody);
 });
 
 // 서버 종료 시 데이터베이스 연결 종료
