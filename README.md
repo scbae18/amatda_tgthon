@@ -3,7 +3,7 @@
 카카오톡 챗봇 서버 연결 방법
 1. node.js -> 서버 파일 index.js 코드 작성(webhook 엔드포인트 설정)
 2. powershell -> ngrok 오픈
-3. ngrok 서버 인증토큰 등록
+3. ngrok 서버 인증토큰 등록(ngrok config add-authtoken YOUR_AUTHTOKEN)
 4. 로컬 서버 실행(ex. node index.js)
 5. powershell(ngrok) -> ngrok 명령어 실행 -> ngrok http 3000(로컬서버 번호)
 6. 챗봇 webhook 스킬등록 -> url에 ngrok 명령어 실행 후 나온 주소 작성(webhook 엔드포인트 추가(/webhook))
