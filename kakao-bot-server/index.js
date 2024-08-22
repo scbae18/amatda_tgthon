@@ -1,5 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const fs = require('fs');
+const path = require('path'); // 경로 관련 모듈을 포함
 const database = require('./database'); // 데이터베이스 모듈을 포함
 
 const app = express();
@@ -7,6 +9,89 @@ const port = 3000;
 
 // JSON 형태의 요청을 처리하기 위한 미들웨어 설정
 app.use(bodyParser.json());
+
+// Webhook 엔드포인트 설정
+app.post('/webhook', (req, res) => {
+    const userRequest = req.body.userRequest;
+    const userMessage = userRequest.utterance;
+
+    console.log('User message:', userMessage);
+
+    // 분야에 따라 폴더 경로 설정
+    let folderPath = '';
+    if (userMessage === '학사') {
+        folderPath = 'path/to/academic_folder';
+    } else if (userMessage === '채용') {
+        folderPath = 'path/to/recruitment_folder';
+    } else if (userMessage === '행사') {
+        folderPath = 'path/to/event_folder';
+    } else if (userMessage === '장학') {
+        folderPath = 'path/to/scholarship_folder';
+    } else {
+        return res.status(400).send({ error: '잘못된 분야 선택입니다.' });
+    }
+
+    // 폴더 내 모든 텍스트 파일 읽기
+    fs.readdir(folderPath, (err, files) => {
+        if (err) {
+            console.error('폴더 읽기 오류:', err);
+            return res.status(500).send({ error: '폴더를 읽는 데 실패했습니다.' });
+        }
+
+        // 텍스트 파일만 필터링
+        const txtFiles = files.filter(file => path.extname(file).toLowerCase() === '.txt');
+
+        // 각 파일의 내용을 읽어 결합
+        const fileContents = [];
+        let filesProcessed = 0;
+
+        txtFiles.forEach(file => {
+            fs.readFile(path.join(folderPath, file), 'utf8', (err, data) => {
+                if (err) {
+                    console.error('파일 읽기 오류:', err);
+                    return res.status(500).send({ error: '파일을 읽는 데 실패했습니다.' });
+                }
+                fileContents.push(data);
+                filesProcessed++;
+
+                // 모든 파일을 읽었으면 응답 보내기
+                if (filesProcessed === txtFiles.length) {
+                    const responseBody = {
+                        "version": "2.0",
+                        "template": {
+                            "outputs": [
+                                {
+                                    "simpleText": {
+                                        "text": fileContents.join('\n\n') // 파일 내용 결합
+                                    }
+                                }
+                            ]
+                        }
+                    };
+
+                    res.status(200).send(responseBody);
+                }
+            });
+        });
+
+        // 폴더 내에 텍스트 파일이 없을 경우 처리
+        if (txtFiles.length === 0) {
+            const responseBody = {
+                "version": "2.0",
+                "template": {
+                    "outputs": [
+                        {
+                            "simpleText": {
+                                "text": '폴더에 텍스트 파일이 없습니다.'
+                            }
+                        }
+                    ]
+                }
+            };
+            res.status(200).send(responseBody);
+        }
+    });
+});
 
 let userStates = {};
 
@@ -27,9 +112,6 @@ app.post('/setKeyword', (req, res) => {
 
     let responseText = '';
 
-    userStates[userId] === 'awaiting_keyword'
-    
-    // 사용자의 현재 상태 확인 및 처리
     if (userStates[userId] === 'awaiting_keyword') {
         // 상태가 'awaiting_keyword'일 때, 즉 사용자가 키워드를 입력한 경우
         // 키워드 저장 처리
