@@ -1,4 +1,3 @@
-// database.js
 const sqlite3 = require('sqlite3').verbose();
 
 // 데이터베이스 연결
