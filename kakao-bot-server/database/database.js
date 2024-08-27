@@ -1,50 +1,71 @@
 const sqlite3 = require('sqlite3').verbose();
+const path = require('path');
+
+// 데이터베이스 파일 경로 설정
+const dbPath = path.join(__dirname, 'database.db');
 
 // 데이터베이스 연결
-const db = new sqlite3.Database('./keywords.db', (err) => {
+const db = new sqlite3.Database(dbPath, (err) => {
     if (err) {
-        console.error('Error connecting to the database:', err.message);
+        console.error('데이터베이스 연결 오류:', err.message);
     } else {
-        console.log('Connected to the SQLite database.');
+        console.log('데이터베이스 연결 성공');
+        // 테이블이 존재하지 않으면 생성
+        db.run(`CREATE TABLE IF NOT EXISTS userInputs (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            userId TEXT NOT NULL,
+            firstKeyword TEXT,
+            secondKeyword TEXT,
+            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+        )`);
+        db.run(`CREATE TABLE IF NOT EXISTS userStates (
+            userId TEXT PRIMARY KEY,
+            state TEXT NOT NULL,
+            firstKeyword TEXT
+        )`);
     }
 });
 
-// 테이블 생성 (만약 테이블이 없으면 생성)
-db.serialize(() => {
-    db.run(`
-        CREATE TABLE IF NOT EXISTS user_keywords (
-            user_id TEXT NOT NULL,
-            keyword TEXT NOT NULL
-        )
-    `, (err) => {
+// 사용자 상태 저장 함수
+exports.saveUserState = (userId, state, firstKeyword, callback) => {
+    const sql = `INSERT OR REPLACE INTO userStates (userId, state, firstKeyword) VALUES (?, ?, ?)`;
+    db.run(sql, [userId, state, firstKeyword], function(err) {
         if (err) {
-            console.error('Error creating table:', err.message);
-        } else {
-            console.log('Table "user_keywords" is ready.');
+            return callback(err);
         }
+        callback(null);
     });
-});
+};
+
+// 사용자 상태 가져오기 함수
+exports.getUserState = (userId, callback) => {
+    const sql = `SELECT state, firstKeyword FROM userStates WHERE userId = ?`;
+    db.get(sql, [userId], (err, row) => {
+        if (err) {
+            return callback(err);
+        }
+        callback(null, row);
+    });
+};
 
 // 키워드 저장 함수
-function saveKeyword(userId, keyword, callback) {
-    const sql = "INSERT INTO user_keywords (user_id, keyword) VALUES (?, ?)";
-    db.run(sql, [userId, keyword], function (err) {
+exports.saveKeywords = (userId, firstKeyword, secondKeyword, callback) => {
+    const sql = `INSERT INTO userInputs (userId, firstKeyword, secondKeyword) VALUES (?, ?, ?)`;
+    db.run(sql, [userId, firstKeyword, secondKeyword], function(err) {
         if (err) {
-            console.error('Error inserting keyword:', err.message);
+            return callback(err);
         }
-        callback(err);
+        callback(null);
     });
-}
+};
 
-// 데이터베이스 종료
-function close() {
+// 데이터베이스 연결 종료 함수
+exports.close = () => {
     db.close((err) => {
         if (err) {
-            console.error('Error closing the database:', err.message);
+            console.error('데이터베이스 종료 오류:', err.message);
         } else {
-            console.log('Database connection closed.');
+            console.log('데이터베이스 종료 성공');
         }
     });
-}
-
-module.exports = { saveKeyword, close };
+};

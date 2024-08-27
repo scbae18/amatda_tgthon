@@ -1,8 +1,10 @@
+// routes/setKeyword.js
+
 const express = require('express');
 const router = express.Router();
-const keywordController = require('../controllers/keywordController');
+const { saveUserInput } = require('../controllers/keywordController'); // 핸들러 함수 가져오기
 
-// 키워드 설정 라우트
-router.post('/', keywordController.setKeyword);
+// POST 요청 처리 핸들러 설정
+router.post('/', saveUserInput);
 
 module.exports = router;
