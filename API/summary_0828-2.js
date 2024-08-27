@@ -11,7 +11,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const openai = new OpenAI({
-    apiKey: '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'
+    apiKey: ''
 });
 
 async function main() {
