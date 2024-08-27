@@ -1,7 +1,7 @@
-Category: Notice
+Category: Recruit
 
-Summary: 24-2 티지윙 스터디가 개설되며, 강의식 및 참여식 스터디를 위한 신청기간은 8/19부터 9/6까지로, 기획서를 제출하여 스터디를 열 수 있습니다.
+Summary: 경희대학교 중앙 IT 동아리 '쿠러그'에서 신입 부원을 모집하며, IT에 관심 있는 모든 경희대 학생을 환영한다. 
 
-Korean Summary: 24-2 티지윙 스터디가 개설되며, 강의식 및 참여식 스터디를 위한 신청기간은 8월 19일부터 9월 6일까지입니다. 스터디를 개설하고 싶은 경우 기획서를 제출해야 합니다.
+Korean Summary: 경희대학교 중앙 IT 동아리 '쿠러그'가 신입 부원을 모집하며, 전공에 상관없이 IT에 관심 있는 경희대 학생들을 대상으로 한다. 프로그래밍 교육과 다양한 프로젝트 참여 기회를 제공하며, 방문 및 온라인 지원 가능하다.
 
-English Summary: The 24-2 TGWING study group is being established with application periods for lecture-style and participatory studies from August 19 to September 6, and those interested in leading a study must submit a project proposal.
+English Summary: The Central IT Club 'KHLUG' at Kyung Hee University is recruiting new members, welcoming all students interested in IT regardless of their major. They offer programming education and various project participation opportunities, with both in-person and online application options available.
