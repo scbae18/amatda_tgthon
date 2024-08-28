@@ -10,10 +10,10 @@ app.use(bodyParser.json());
 
 // 라우트 설정
 const webhookRoutes = require('./routes/webhook');
-const keywordRoutes = require('./routes/setKeyword');
+const keywordRoutes = require('./routes/keyword');
 
 app.use('/webhook', webhookRoutes);
-app.use('/setKeyword', keywordRoutes);
+app.use('/keyword', keywordRoutes);
 
 // 서버 종료 시 데이터베이스 연결 종료
 process.on('SIGINT', () => {
