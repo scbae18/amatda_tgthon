@@ -4,6 +4,30 @@ from datetime import datetime
 import os
 import win32gui
 import re
+import mysql.connector
+
+def connect_to_db():
+    # Connect to the MySQL database
+    return mysql.connector.connect(
+        host='localhost',
+        user='root',
+        password='qzwxec!&93',
+        database='kakao_talk_db'
+    )
+
+def insert_into_db(content):
+    conn = connect_to_db()
+    cursor = conn.cursor()
+    
+    # Prepare the SQL query
+    query = "INSERT INTO notices (category, content, created_at) VALUES (%s, %s, %s)"
+    data = ('chat', content, datetime.now())
+    
+    cursor.execute(query, data)
+    conn.commit()
+    
+    cursor.close()
+    conn.close()
 
 def focus_kakao_window():
     kakao_window = win32gui.FindWindow(None, '티지톤')
@@ -122,6 +146,9 @@ def extract_new_lines(old_file, new_file, new_folder):
         
         with open(new_file_path, 'w', encoding='utf-8') as f:
             f.write(new_content)
+            
+            # Insert the new content into the MySQL database
+            insert_into_db(new_content)
 
 def main():
     while True:
