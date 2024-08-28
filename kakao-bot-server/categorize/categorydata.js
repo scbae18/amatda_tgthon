@@ -4,7 +4,7 @@ const path = require('path');
 
 // 데이터베이스 파일 경로 설정
 const dbPath = path.join(__dirname, 'notices.db');
-const txtFilePath = path.join(__dirname, 'output.txt'); // 텍스트 파일 경로 설정
+const txtFilePath = 'C:\\Users\\scbae\\Desktop\\tgthon-1\\amatda_tgthon\\DATA\\summary\\output.txt'; // 텍스트 파일 경로 설정
 
 // 데이터베이스 초기화 함수
 function initializeDb() {

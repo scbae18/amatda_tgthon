@@ -1,7 +1,0 @@
-Category: Recruit
-
-Summary: 경희대학교 중앙 IT 동아리 '쿠러그'에서 신입 부원을 모집하며, IT에 관심 있는 모든 경희대 학생을 환영한다. 
-
-Korean Summary: 경희대학교 중앙 IT 동아리 '쿠러그'가 신입 부원을 모집하며, 전공에 상관없이 IT에 관심 있는 경희대 학생들을 대상으로 한다. 프로그래밍 교육과 다양한 프로젝트 참여 기회를 제공하며, 방문 및 온라인 지원 가능하다.
-
-English Summary: The Central IT Club 'KHLUG' at Kyung Hee University is recruiting new members, welcoming all students interested in IT regardless of their major. They offer programming education and various project participation opportunities, with both in-person and online application options available.

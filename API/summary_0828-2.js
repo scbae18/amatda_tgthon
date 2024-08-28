@@ -15,14 +15,15 @@ const openai = new OpenAI({
 });
 
 async function main() {
-  // 텍스트 파일에서 입력 읽기
-  const inputFilePath = path.join(__dirname, 'input.txt');
+  const inputFilePath = path.join('C:', 'Users', 'scbae', 'Desktop', 'tgthon-1', 'amatda_tgthon', 'DATA', 'origin', 'input.txt');
+
+    // 텍스트 파일에서 입력 읽기
   const inputText = fs.readFileSync(inputFilePath, 'utf-8');
 
   // OpenAI API 호출
   const completion = await openai.chat.completions.create({
     messages: [
-        {"role": "system", "content": "You are an efficient text summarizer. Please summarize the text. Describe in Korean and English. Follow the next rule. First: select a category from one of the following - notice/recruit/scholarship/event. Second: write a one-sentence summary that condenses everything. Next: summarize the text. Describe in Korean and English."},
+        {"role": "system", "content": "You are an efficient text summarizer. Please summarize the text. Describe in Korean and English. Follow the next rule. First: select a category from one of the following - notice/recruitment/scholarship/event(Be sure to do as I tell you the category words.). And Make all category names in lowercase letters. Second: write a one-sentence summary that condenses everything in korean. Next: summarize the text. Describe in Korean and English. When providing a summary, be sure to add 'Category: ', 'Summary: ', 'Korean Summary: ', and 'English Summary: ' in front of each content. Third: when you make txt file, do not describe markdown"},
         {"role": "user", "content": inputText}
     ],
     model: "gpt-4o-mini",
@@ -31,8 +32,9 @@ async function main() {
   // 생성된 응답 추출
   const content = completion.choices[0].message.content;
 
-  // 응답을 output.txt 파일로 저장
-  fs.writeFileSync('output.txt', content, 'utf-8');
+  const outputFilePath = path.join('C:', 'Users', 'scbae', 'Desktop', 'tgthon-1', 'amatda_tgthon', 'DATA', 'summary', 'output.txt');
+    
+  fs.writeFileSync(outputFilePath, content, 'utf-8')
 
   console.log("응답이 output.txt 파일에 저장되었습니다.");
 }
