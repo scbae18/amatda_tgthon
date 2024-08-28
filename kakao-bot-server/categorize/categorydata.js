@@ -19,6 +19,7 @@ function initializeDb() {
                 summary TEXT NOT NULL,
                 korean_summary TEXT,
                 english_summary TEXT,
+                origin TEXT,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         `);
@@ -28,15 +29,15 @@ function initializeDb() {
 }
 
 // 공지사항 추가 함수
-function addNotice(category, summary, koreanSummary, englishSummary) {
+function addNotice(category, summary, koreanSummary, englishSummary, origin) {
     const db = new sqlite3.Database(dbPath);
 
     const stmt = db.prepare(`
-        INSERT INTO notices (category, summary, korean_summary, english_summary) 
-        VALUES (?, ?, ?, ?)
+        INSERT INTO notices (category, summary, korean_summary, english_summary, origin) 
+        VALUES (?, ?, ?, ?, ?)
     `);
 
-    stmt.run(category, summary, koreanSummary, englishSummary, function(err) {
+    stmt.run(category, summary, koreanSummary, englishSummary, origin, function(err) {
         if (err) {
             console.error('Error inserting notice:', err.message);
         } else {
@@ -62,6 +63,8 @@ function parseNoticeFile(filePath) {
         let summary = '';
         let koreanSummary = '';
         let englishSummary = '';
+        let origin = '';
+        let isOrigin = false;
 
         for (let line of lines) {
             if (line.startsWith('Category: ')) {
@@ -72,11 +75,18 @@ function parseNoticeFile(filePath) {
                 koreanSummary = line.substring('Korean Summary: '.length).trim();
             } else if (line.startsWith('English Summary: ')) {
                 englishSummary = line.substring('English Summary: '.length).trim();
+            } else if (line.startsWith('Origin: ')) {
+                // Origin 필드 시작
+                origin = line.substring('Origin: '.length).trim();
+                isOrigin = true;
+            } else if (isOrigin) {
+                // Origin 필드가 시작된 후에는 모든 줄을 origin에 추가
+                origin += '\n' + line;
             }
         }
 
         // 공지사항 데이터베이스에 추가
-        addNotice(category, summary, koreanSummary, englishSummary);
+        addNotice(category, summary, koreanSummary, englishSummary, origin.trim());
     });
 }
 
