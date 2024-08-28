@@ -2,7 +2,7 @@ const { exec } = require('child_process');
 const path = require('path');
 
 // 파일 경로 설정
-const summaryScript = path.join('C:', 'Users', 'scbae', 'Desktop', 'tgthon-1', 'amatda_tgthon', 'API', 'summary_0828-2.js');
+const summaryScript = path.join('C:', 'Users', 'scbae', 'Desktop', 'tgthon-1', 'amatda_tgthon', 'API', 'summaryapi.js');
 const categoryDataScript = path.join('C:', 'Users', 'scbae', 'Desktop', 'tgthon-1', 'amatda_tgthon', 'kakao-bot-server', 'categorize', 'categorydata.js');
 
 // 첫 번째 파일 실행
