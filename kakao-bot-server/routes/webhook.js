@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const webhookController = require('../controllers/webhookController');
+const { handleKakaoRequest } = require('../controllers/webhookController');
 
-router.post('/', webhookController.handleWebhook);
+router.post('/', handleKakaoRequest);
 
 module.exports = router;
